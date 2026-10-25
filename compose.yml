@@ -1,13 +1,10 @@
-# VibeNest single-service deployment. Local Dovecot fixture: compose.dev.yml.
-# HTTP_AUTH_PASSWORD is generated/persisted by VibeNest from .env.example.
-# For local Compose, supply your own unique password; there is no fallback secret.
 services:
   parse-dmarc:
     build:
       context: ./deploy/vibenest/wrapper
       dockerfile: Dockerfile
     expose:
-      - "8080"
+    - "8080"
     environment:
       SERVER_HOST: "0.0.0.0"
       SERVER_PORT: "8080"
@@ -22,7 +19,15 @@ services:
       GOMEMLIMIT: 180MiB
       GOMAXPROCS: "1"
     volumes:
-      - report-data:/data
-
+    - report-data:/data
+    deploy:
+      resources:
+        limits:
+          memory: '268435456'
+          cpus: 0.25
+        reservations: {}
+    mem_limit: 268435456
+    memswap_limit: 268435456
+    cpus: 0.25
 volumes:
   report-data:
